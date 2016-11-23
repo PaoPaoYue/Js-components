@@ -1,0 +1,327 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+body,ul,li,p,h1,h2,h3,h4,h5,h6,img,br,hr,table,tr,td,dl,dt,dd,form {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family:"微软雅黑";
+    font-size: 16px;
+    color: #434343;
+}
+ul,li {
+    list-style: none;
+}
+img {
+    border: none;
+}
+a {
+    text-decoration: none;
+    color: #555;
+}
+a: hover {
+    color: #3366ff;
+}
+	table{
+		margin: 20px auto;
+	}
+	td{
+		height: 30px;
+		width: 30px;
+		vertical-align: middle;
+		text-align: center;
+		background-color: #ccc;
+		
+	}
+</style>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.js"></script>
+</head>
+
+<body>
+	<div class="outer">
+        <div class="container">
+          <table>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            </table>
+        </div>
+	</div>
+<script type="text/javascript">
+
+var minemap=[];
+	
+function minecell(row,col,value,displaystate,flag) {
+	this.row=row;
+	this.col=col;
+	this.value=value;
+	this.displaystate=displaystate;
+	this.flag=flag
+}
+	
+function refresh(){
+	minemap.forEach(function(item){
+		if(item.displaystate>0){
+			item.displaystate=2;
+			item.flag=0;
+			if(item.value==0){
+				$('table tr:nth-child('+item.row+') td:nth-child('+item.col+')').css({backgroundColor:'#999'});
+			}
+			else if(item.value>0){
+				$('table tr:nth-child('+item.row+') td:nth-child('+item.col+')').html(item.value).css({backgroundColor:'#999'});
+			}
+			else if(item.value==-1){
+				$('table tr:nth-child('+item.row+') td:nth-child('+item.col+')').html('*').css({backgroundColor:'#999'});
+			}			
+		}
+		else{
+			if(item.flag==1){
+				$('table tr:nth-child('+item.row+') td:nth-child('+item.col+')').html('!');
+			}
+			if(item.flag==0){
+				$('table tr:nth-child('+item.row+') td:nth-child('+item.col+')').html('');
+			}
+		}
+
+	});
+}
+
+function showall(){
+	minemap.forEach(function(item){item.displaystate=1});
+	refresh();
+}
+
+function mine(height,width,num) {
+	minemap=[];
+	$('table tr').detach();
+	for (i=0;i<height;i++){
+		$('<tr></tr>').appendTo($('table'));
+		for(j=0;j<width;j++){
+			$('<td></td>').appendTo($('tr')[i]);
+			var cell=new minecell(i+1,j+1,0,0,0);
+			minemap.push(cell);
+		}
+	}
+	
+	(function(){
+		var temp_1=[];
+		for (var n=0 ; n<num ; n++){
+			var a=~~(Math.random()*minemap.length);
+			if (temp_1.indexOf(a)==-1){
+				temp_1.push(a);
+				minemap[a].value=-1;
+			}
+			else {
+				--n;
+			}
+		}		
+	})();
+
+	(function(){
+		var temp_2=minemap.filter(function(item){return item.value==-1});
+		temp_2.forEach(function(x){
+			minemap.map(function(item){
+				if([x.row-1,x.row+1,x.row].indexOf(item.row)>-1&&[x.col-1,x.col+1,x.col].indexOf(item.col)>-1){
+					(item.value==-1)?item.value:++item.value;
+				}
+			});
+		});
+	})();
+	
+	function nearby(submine){
+		var sub=[];
+		submine.forEach(function(x){
+			minemap.map(function(item){
+				if([x.row-1,x.row+1,x.row].indexOf(item.row)>-1&&[x.col-1,x.col+1,x.col].indexOf(item.col)>-1&&item.displaystate<2){
+					item.displaystate=2;
+					if (item.value==0){
+						sub.push(item);
+					}
+				}
+			});	
+		});
+		if(sub.length>0){
+			nearby(sub);			
+		}
+	}
+
+	function click_handler(e){
+		var temp_4=$('table td').index($(this));
+		var x=minemap[temp_4];	
+		if(x.displaystate==0){		
+		if(e.button==0){
+				x.displaystate=1;
+				refresh();
+				if(x.value==0){
+					var sub=[x];
+					nearby(sub);
+					refresh();
+				}				
+			}
+		}
+		if(e.button==2){
+			if(x.displaystate==0||x.flag>0){
+				(x.flag==1)?x.flag=0:x.flag=1;
+				refresh();
+			}
+		}
+       if(e.button==1){
+		   if(x.displaystate==2){
+				var flag=0,notflag=[];
+				minemap.map(function(item){
+					if([x.row-1,x.row+1,x.row].indexOf(item.row)>-1&&[x.col-1,x.col+1,x.col].indexOf(item.col)>-1&&item.displaystate<2){
+						if (item.flag>0){
+							flag+=1;
+						}
+						else {
+							notflag.push(item);
+						}
+					}
+				});					
+			}
+			if(flag==x.value){
+				notflag.forEach(function(item){
+					item.displaystate=1;
+					refresh();
+					if(item.value==0){
+						var sub=[item];
+						nearby(sub);
+						refresh();
+					}
+				});
+			}
+	   }
+	}
+	var td=document.getElementsByTagName('td');
+	Array.prototype.forEach.call(td,function(item){item.addEventListener('mousedown',click_handler,false);});	
+}
+window.onload = function(){
+   document.oncontextmenu = function(e){
+	   e.preventDefault();
+   };
+}
+
+</script>
+</body>
+</html>

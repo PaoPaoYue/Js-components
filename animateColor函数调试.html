@@ -1,0 +1,155 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<style type="text/css">
+body,ul,li,p,h1,h2,h3,h4,h5,h6,img,br,hr,table,tr,td,dl,dt,dd,form {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family:"微软雅黑";
+    font-size: 16px;
+    color: #434343;
+}
+ul,li {
+    list-style: none;
+}
+img {
+    border: none;
+}
+a {
+    text-decoration: none;
+    color: #555;
+}
+a: hover {
+    color: #3366ff;
+}
+div{
+	background-color:#adeafb;
+	color: #434343;
+	border:thick solid;
+	border-color:#fff;
+	box-shadow:0px 0px 60px 10px #666;
+	line-height:100px;
+	width:100px;
+	text-align:center;
+	margin:100px auto;
+}
+section{
+        margin:0 auto;
+        padding: 25px;
+        border-radius:10px;
+        box-shadow:0px 0px 5px 2px #888;
+        width:350px;
+}
+label{
+	display:block;
+	margin:5px auto;
+}
+input[type^='text']{
+	width:180px;
+}
+#go{
+	display:block;
+	width:40px;
+	line-height:20px;
+	margin:10px auto 0px auto;
+}
+</style>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.js"></script>
+</head>
+
+<body>
+<div>animating</div>
+<section>
+<fieldset>
+<legend>animateColor</legend>
+<form>
+<label>目标字体颜色：<input name="targetColor" type="text" placeholder="#000/#000000/rgb(0,0,0)"/></label>
+<label>目标背景颜色：<input name="targetBackgroundColor" type="text" placeholder="#000/#000000/rgb(0,0,0)"/></label>
+<label>目标动画时间：<input name="duration" type="text" placeholder="(ms)"/></label>
+</form>
+<button id='go'>go!</button>
+</fieldset>
+</section>
+<script>
+'use strict'
+function toColorArray (colorString) {
+	if (colorString.match(/^#\w{3}\b/)){
+		var colorArray=colorString.match(/\w/g);
+		colorArray=colorArray.map(function(a){
+			return parseInt('0x'+a)*((1<<4)+1);
+		});
+		return colorArray;}
+	else if (colorString.match(/^#\w{6}/)){
+		var colorArray=colorString.match(/\w{2}/g);
+		colorArray=colorArray.map(function(a){
+			return parseInt('0x'+a);
+		});
+        return colorArray;}
+	else if (colorString.match(/^rgb/))
+	return colorString.match(/\d+\b/g);
+}
+function toColorString (colorArray) {
+        return 'rgb('+colorArray.join(',')+')';
+}
+$.fn.animateColor = function (target,duration,oncomplete) {
+	var targetColor=[], startColor=[], deltaColor=[], currentColor=[];
+	var that = this;
+	var length = 0;
+	for (var i in target) {
+		targetColor.push(toColorArray(target[i]));
+		startColor.push(toColorArray($(this).css(i)));
+		length+=1;
+	}
+	for (var n=0 ; n<length ; n++){
+		deltaColor[n]=[];
+		currentColor[n]=[];
+		for (var k=0 ; k<3 ;k++){
+			deltaColor[n][k]=targetColor[n][k]-startColor[n][k];
+		}
+	}
+	var startTime= (new Date()).getTime();
+	animate();
+	
+	function animate () {
+		var deltaTime = (new Date()).getTime()- startTime;
+		var fraction = deltaTime/duration;
+		var j=0
+		if (fraction<1) {
+			for (var n=0 ; n<length ; n++){
+				for (var k=0 ; k<3 ;k++){
+					currentColor[n][k] = parseInt(startColor[n][k])+~~(deltaColor[n][k]*(Math.sqrt(fraction)));
+				}
+			}
+			for (var i in target) {
+				$(that).css(i,toColorString(currentColor[j]));
+				j+=1;
+			}
+			setTimeout(animate,25);
+		}
+		else if (fraction>=1){
+			for (var i in target) {
+				$(that).css(i,toColorString(targetColor[j]));
+				j+=1
+			}
+			if (oncomplete) oncomplete(that);
+		}
+	}
+}
+</script>
+<script>
+var oncomplete=function (e) {$(e).html('complete!')};
+var eee=function () {
+	$('div').html('animating');
+	var targetColor=document.forms[0].targetColor.value;
+	var targetBackgroundColor=document.forms[0].targetBackgroundColor.value;
+	var duration=document.forms[0].duration.value;
+	$('div').animateColor({color:targetColor,backgroundColor:targetBackgroundColor},duration,oncomplete);
+}
+$('#go').click(eee);
+</script>
+</body>
+</html>

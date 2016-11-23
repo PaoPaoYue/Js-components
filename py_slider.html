@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.js"></script>
+<style type="text/css">
+p{
+    height:100px;
+	width:100px;
+	background-color:#adf;
+}
+.01{
+    height:50px;
+	width:50px;
+	background-color:#adf;
+	overflow:hidden;
+}
+</style>
+
+</head>
+
+<body>
+<div class="01"><p></p></div>
+<script>
+console.log($('.01 p').css('background-color'));
+console.log($('.01').attr('class'));
+</script>
+</body>
+</html>
