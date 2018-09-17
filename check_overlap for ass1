@@ -1,0 +1,22 @@
+/* check overlap with recursion */
+
+int
+check_overlap(char superstring[], char word[], int len) {
+	if(strlen(superstring) >= strlen(word)) {
+		if(strncasecmp(superstring, word, strlen(word)) == 0) {
+			*superstring = toupper(*superstring);
+			return 0;
+		} else {
+			return check_overlap(superstring + 1, word, strlen(word));
+		}
+	} else if(strlen(word) > strlen(superstring) && strlen(superstring) > 0) {
+		len = strlen(superstring);
+		if(strncasecmp(superstring, word, len) == 0) {
+			return len;
+		} else {
+			return check_overlap(superstring + 1, word, len - 1);
+		}
+	} else {
+		return -1;
+	}
+}
